@@ -1,6 +1,25 @@
-.venv/
+# Ignore OS and editor artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Environment and logs
 .env
 *.log

@@ -1,8 +1,11 @@
-# cputemp
+# cputemp — CPU Temperature Monitor & IPMI Fan Controller
 
-CPU temperature monitor and IPMI fan speed controller for Supermicro servers.
+> CPU temperature monitor and IPMI fan speed controller for Supermicro
+> servers.  Displays a live Rich terminal dashboard showing CPU
+> temperatures and fan zone speeds, with automatic fan control based
+> on temperature thresholds.
 
-Displays a live terminal dashboard (via [Rich](https://github.com/Textualize/rich)) showing CPU temperatures and fan zone speeds, with automatic fan control based on temperature thresholds.
+---
 
 ## Features
 
@@ -23,12 +26,15 @@ Displays a live terminal dashboard (via [Rich](https://github.com/Textualize/ric
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/cputemp.git /opt/cputemp
+git clone https://github.com/d-r-0-0/cputemp.git /opt/cputemp
 cd /opt/cputemp
 
 # Create virtual environment and install dependencies
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
+
+# Install dev tools (linting, testing)
+make install-dev
 
 # Install the systemd service
 sudo cp systemd/cputemp.service /etc/systemd/system/
@@ -45,7 +51,8 @@ sudo systemctl start cputemp
 tmux attach -t cputemp
 ```
 
-Once attached, type a fan speed (0-100) or `a` for automatic mode. Detach with `Ctrl+B` then `D`.
+Once attached, type a fan speed (0-100) or `a` for automatic mode.
+Detach with `Ctrl+B` then `D`.
 
 ### Service management
 
@@ -54,6 +61,15 @@ systemctl status cputemp    # Check status
 systemctl restart cputemp   # Restart
 systemctl stop cputemp      # Stop
 journalctl -u cputemp       # View logs
+```
+
+### Development
+
+```bash
+make verify    # Run lint + tests
+make lint      # Lint only (ruff)
+make fmt       # Format (ruff format)
+make test      # Tests only (pytest)
 ```
 
 ## Configuration
@@ -75,7 +91,23 @@ This tool uses the following IPMI raw commands (Supermicro format):
 - **Set fan speed:** `ipmitool raw 0x30 0x70 0x66 0x01 <zone> <speed>`
 - **Read fan speed:** `ipmitool raw 0x30 0x70 0x66 0x00 <zone>`
 
-Where `<zone>` is `0x00` or `0x01` and `<speed>` ranges from `0x09` to `0x66`.
+Where `<zone>` is `0x00` or `0x01` and `<speed>` ranges from `0x09`
+to `0x66`.
+
+## File Layout
+
+```
+cputemp.py             # Main script — monitor + fan control
+requirements.txt       # Python dependencies
+systemd/
+  cputemp.service      # systemd unit file (source of truth)
+cantrips/              # Automation scripts
+docs/                  # Documentation
+sessions/              # Session close-out logs
+AGENTS.md              # Universal AI agent instructions
+CLAUDE.md              # Claude Code instructions
+TODO.md                # Feature backlog
+```
 
 ## License
 
