@@ -1,0 +1,16 @@
+[Unit]
+Description=CPU Temperature & Fan Speed Monitor
+After=network.target
+
+[Service]
+Type=forking
+User=root
+WorkingDirectory=/opt/cputemp
+RemainAfterExit=yes
+ExecStart=/usr/bin/tmux new-session -d -s cputemp '/opt/cputemp/.venv/bin/python /opt/cputemp/cputemp.py'
+ExecStop=/usr/bin/tmux kill-session -t cputemp
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
